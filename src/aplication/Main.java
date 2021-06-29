@@ -37,21 +37,18 @@ public class Main {
 			System.out.println("Check-out-date (dd/MM/yyyy): ");
 			checkout = sdf.parse(sc.next());
 			
-			Date now = new Date();
-			if(checkin.before(now) || checkout.before(now)) {
-				System.out.println("Erro in reservation: Reservation dates for update must be future!");
+			//chama o método updateDates na classe reservation passando checkin e checkout como parametro e adicionando no atributo error a String que o método retornou
+			String error = reservation.updateDates(checkin, checkout);
+			//se o updateDates tiver retornado algo diferente de null
+			if(error != null) {
+				System.out.println("Error in reservation: " + error);
 			}
-			else if(!checkout.after(checkin)) {
-				System.out.println("Error in reservation: Check-out date must be after check-in date");
-			}
+			//se o updateDates tiver retornado null
 			else {
-				reservation.updateDates(checkin, checkout);
 				System.out.println("Reservation: " + reservation);
 			}
-			
-			
 		}
-		
+		//no final da execução encerra o objeto sc de tipo Scanner
 		sc.close();
 	}
 
