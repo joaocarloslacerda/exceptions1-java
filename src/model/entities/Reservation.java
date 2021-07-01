@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import model.exception.DomainException;
+
 public class Reservation {
 	
 	private Integer roomNumber;
@@ -18,7 +20,12 @@ public class Reservation {
 	}
 	
 	//criando construtor personalizado com base nos parâmetros
-	public Reservation(Integer roomNumber, Date checkin, Date checkout) {
+	public Reservation(Integer roomNumber, Date checkin, Date checkout) throws DomainException {
+		//verifica se o checkout não está ocorrendo antes do checkin
+		if(!checkout.after(checkin)) {
+			//lança esta exceção caso entre no if
+			throw new DomainException("Check-out date must be after check-in date");
+		}
 		this.roomNumber = roomNumber;
 		this.checkin = checkin;
 		this.checkout = checkout;
@@ -53,21 +60,21 @@ public class Reservation {
 	}
 	
 	//atualizando o checkin e o checkout
-	public String updateDates(Date checkin, Date checkout) {
+	public void updateDates(Date checkin, Date checkout) throws DomainException {
 		Date now = new Date();
 		//verifica se a data para o checkin é antes da data atual ou se a data de checkout é antes da data atual
 		if(checkin.before(now) || checkout.before(now)) {
-			return "Reservation dates for update must be future!";
+			//lança esta exceção caso entre no if
+			throw new DomainException("Reservation dates for update must be future!");
 		}
 		//verifica se o checkout não está ocorrendo antes do checkin
 		if(!checkout.after(checkin)) {
-			return "Check-out date must be after check-in date";
+			//lança esta exceção caso entre no if
+			throw new DomainException("Check-out date must be after check-in date");
 		}
 		//atualiza o checkin e o checkout
 		this.checkin = checkin;
 		this.checkout = checkout;
-		//retorna null caso não tenha ocorrido algum erro durante a execução deste método
-		return null;
 	}
 	
 	@Override
